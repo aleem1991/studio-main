@@ -1,0 +1,28 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Modern pharmacy interior with clean shelves",
+      "imageUrl": "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?q=80&w=2000&auto=format&fit=crop",
+      "imageHint": "modern pharmacy interior"
+    },
+    {
+      "id": "prescription-mock",
+      "description": "A handwritten medical prescription on a white paper",
+      "imageUrl": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop",
+      "imageHint": "medical prescription"
+    },
+    {
+      "id": "delivery-man",
+      "description": "Friendly delivery person with a medical package",
+      "imageUrl": "https://images.unsplash.com/photo-1619647268968-07e0569611b7?q=80&w=1200&auto=format&fit=crop",
+      "imageHint": "delivery person"
+    },
+    {
+      "id": "pharmacist",
+      "description": "Professional pharmacist working at the counter",
+      "imageUrl": "https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=1200&auto=format&fit=crop",
+      "imageHint": "pharmacist working"
+    }
+  ]
+}
