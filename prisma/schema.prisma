@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" // This is the local database file!
+}
+
+// 1. User Table (Stores Patients, Pharmacies, Riders, and Admins)
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   // "USER", "STORE", "DELIVERY", or "ADMIN"
+  address   String?
+  createdAt DateTime @default(now())
+
+  // Relationships
+  ordersAsUser  Order[] @relation("CustomerOrders")
+  ordersAsStore Order[] @relation("StoreOrders")
+}
+
+// 2. Order Table (Stores the prescription and medicines)
+model Order {
+  id          String   @id @default(cuid())
+  customerId  String
+  storeId     String?
+  status      String   @default("PENDING") // PENDING, ACCEPTED, DELIVERING, COMPLETED
+  medicines   String   // We will store the AI JSON result here as a string
+  imageBase64 String   // Stores the prescription image so we don't need cloud storage
+  createdAt   DateTime @default(now())
+
+  // Relationships
+  customer    User     @relation("CustomerOrders", fields: [customerId], references: [id])
+  store       User?    @relation("StoreOrders", fields: [storeId], references: [id])
+}

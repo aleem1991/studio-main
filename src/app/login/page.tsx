@@ -9,27 +9,32 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Pill, Mail, Lock, User, Store, Bike, ShieldCheck, Loader2 } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { UserRole } from '@/types';
+import { loginUser } from '@/app/actions/auth'; // 🟢 Added real authentication
 
 export default function LoginPage() {
   const router = useRouter();
-  const [role, setRole] = useState<UserRole>('USER');
+  const[role, setRole] = useState('USER');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate auth & redirect based on role
-    setTimeout(() => {
-      const paths: Record<UserRole, string> = {
+    const formData = new FormData(e.currentTarget);
+    const result = await loginUser(formData, role);
+
+    if (result.success) {
+      const paths: any = {
         'USER': '/dashboard/user',
         'STORE': '/dashboard/store',
         'DELIVERY': '/dashboard/delivery',
         'ADMIN': '/dashboard/admin',
       };
       router.push(paths[role]);
-    }, 1500);
+    } else {
+      alert(result.error); // Show error if wrong password
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,7 +60,7 @@ export default function LoginPage() {
             <CardContent className="space-y-6">
               <RadioGroup 
                 value={role} 
-                onValueChange={(val) => setRole(val as UserRole)}
+                onValueChange={(val) => setRole(val)}
                 className="grid grid-cols-2 gap-4"
               >
                 {[
@@ -83,7 +88,7 @@ export default function LoginPage() {
                   <Label htmlFor="email">Email Address</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="email" type="email" placeholder="name@example.com" className="pl-10" required />
+                    <Input id="email" name="email" type="email" placeholder="name@example.com" className="pl-10" required />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -93,7 +98,7 @@ export default function LoginPage() {
                   </div>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="password" type="password" placeholder="••••••••" className="pl-10" required />
+                    <Input id="password" name="password" type="password" placeholder="••••••••" className="pl-10" required />
                   </div>
                 </div>
               </div>

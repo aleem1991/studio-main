@@ -7,25 +7,32 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Pill, Mail, Lock, User, Store, Bike, ArrowRight } from 'lucide-react';
+import { registerUser } from '@/app/actions/auth'; // Add this import at the top
 
 export default function SignUpPage() {
   const router = useRouter();
   const [role, setRole] = useState('USER');
   const[isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Simulate auth & redirect based on role
-    setTimeout(() => {
-      const paths: any = {
-        'USER': '/dashboard/user',
-        'STORE': '/dashboard/store',
-        'DELIVERY': '/dashboard/delivery',
-      };
-      router.push(paths[role]);
-    }, 1500);
-  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setIsLoading(true);
+  
+  const formData = new FormData(e.currentTarget);
+  const result = await registerUser(formData, role);
+
+  if (result.success) {
+    const paths: any = {
+      'USER': '/dashboard/user',
+      'STORE': '/dashboard/store',
+      'DELIVERY': '/dashboard/delivery',
+    };
+    router.push(paths[role]);
+  } else {
+    alert(result.error);
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-pattern flex items-center justify-center p-4">
@@ -67,21 +74,21 @@ export default function SignUpPage() {
               <Label htmlFor="name">Full Name</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="name" type="text" placeholder="John Doe" className="pl-10 h-11" required />
+                <Input id="name" name="name" type="text" placeholder="John Doe" className="pl-10 h-11" required />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="name@example.com" className="pl-10 h-11" required />
+                <Input id="email" name="email" type="email" placeholder="name@example.com" className="pl-10 h-11" required />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="password" type="password" placeholder="••••••••" className="pl-10 h-11" required />
+                <Input id="password" name="password" type="password" placeholder="••••••••" className="pl-10 h-11" required />
               </div>
             </div>
           </div>

@@ -1,11 +1,13 @@
-"use client";
+import DashboardLayout from '@/components/dashboard-layout';
+import { cookies } from 'next/headers';
 
-import DashboardLayout from '@/components/dashboard-layout'; // Adjust this import path based on where you saved dashboard-layout.tsx
+export default async function UserDashboardLayout({ children }: { children: React.ReactNode }) {
+  // Read the real name from the login cookie!
+  const cookieStore = await cookies();
+  const userName = cookieStore.get('userName')?.value || 'Guest User';
 
-export default function UserDashboardLayout({ children }: { children: React.ReactNode }) {
-  // We pass 'USER' so the sidebar knows to show the user links!
   return (
-    <DashboardLayout role="USER" userName="John Doe">
+    <DashboardLayout role="USER" userName={userName}>
       {children}
     </DashboardLayout>
   );
